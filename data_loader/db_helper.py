@@ -21,6 +21,8 @@ def create_database(dbname="demo"):
     except sqlite.Error as e:
         print("Error occured")  # Voir docstring pour print
         print(e)  # Voir docstring pour print
+    finally:
+        connect.close()
 
 
 def add_episode(title, season_number, number, dbname="demo"):
@@ -31,6 +33,7 @@ def add_episode(title, season_number, number, dbname="demo"):
     cur = connect.cursor()
     cur.execute(SQL_ADD_EPISODE, (number, season_number, title))
     connect.commit()
+    connect.close()
 
 
 def load_episodes(season_number=None, dbname="demo"):
@@ -42,5 +45,8 @@ def load_episodes(season_number=None, dbname="demo"):
         cur.execute(SQL_GET_ALL_EPISODES)
     else:
         cur.execute(SQL_GET_EPISODES_FOR_SEASON, (season_number,))
+
+    connect.close()
+
     return cur.fetchall()
 
